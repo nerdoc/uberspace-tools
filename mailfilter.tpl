@@ -52,9 +52,9 @@ else
 # if no directory of the above exist, create a "Junk" directory and use that.
 if( $JUNKDIR = "" )
 {
-  `maildirmake "$MAILDIR/.Junk"`
   JUNKDIR=".Junk"
 }
+`maildirmake "$MAILDIR/$JUNKDIR"`
 
 `test -d "$MAILDIR/.Junk.als Spam lernen"`
 if( $RETURNCODE == 1 )
