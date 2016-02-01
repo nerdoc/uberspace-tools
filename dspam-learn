@@ -1,0 +1,147 @@
+#!/bin/bash
+set -euo pipefail
+# normally this is a good idea, but in this case it messes with $BE_NICE
+#IFS=$'\n\t'
+########################################################################
+# 2015-02-23 Christopher Hirschmann c.hirschmann@jonaspasche.com
+########################################################################
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+########################################################################
+#
+# This script will look for a system user's primary maildir
+# $HOME/Maildir and possible vMailMgr maildirs under $HOME/users/
+# and search them for folders indicating a certain DSPAM setup:
+#
+# \
+#  \___ Inbox
+#   \
+#    \___ Junk
+#          \
+#           \___ als Spam lernen
+#            \
+#             \___ kein Spam
+#
+# If it finds this folder structure in any maildir, it will show files
+# from the folders 'kein Spam' and 'als Spam lernen' to DSPAM (so
+# it can learn) and after that it will delete them.
+#
+# You can make this script more verbose with '-v'.
+#
+# You can also test this script with '-n' in dry run mode. If combined
+# with '-v' it will output what it would have done, but won't do any-
+# thing.
+#
+########################################################################
+
+DRYRUN=0;
+VERBOSE=0;
+
+while getopts ":hvn" Option
+do
+    case $Option in
+        h       )       echo -e "Usage:\n-n\tdry run\n-v\tbe verbose\n-h\tthis help message"; exit 0;;
+        n       )       DRYRUN=1; ;;
+        v       )       VERBOSE=1; ;;
+        *       )       echo -e "ERROR: Unimplemented option chosen: -${OPTARG}"; exit 1;;
+    esac
+done
+
+if `grep -q "CentOS release 5" /etc/redhat-release`;
+then
+    # ionice -c3 is not supported on CentOS 5 for users != root (needs Linux => 2.6.25)
+    # so let's fall back to ionice -c2 -n7 which is better than nothing
+    BE_NICE="nice -n 19 ionice -c2 -n7";
+else
+    BE_NICE="nice -n 19 ionice -c3";
+fi
+
+if [ "${DRYRUN}" == "1" ];
+then
+    echo "Running in dry run mode."
+fi
+
+# to be able to process directory and file names regardless of any kind
+# of weird characters we need to list these names separated by null
+# characters and process them accordingly.
+
+( find ${HOME} -name Maildir -print0 ; if [ -d ${HOME}/users ]; then find ${HOME}/users/ -mindepth 1 -maxdepth 1 -print0 ; fi )| while read -d $'\0' -r DIR ;
+do
+    if [ "${VERBOSE}" == "1" ];
+    then
+        echo "Determining Junk directory in ${DIR}.";
+    fi
+    
+    if [ -d "${DIR}/.Junk-E-Mail" ];
+    then
+        # Outlook
+        JUNKDIR=".Junk-E-Mail"
+    elsif [ -d "${DIR}/.Spam" ];
+    then
+        # GMail
+        JUNKDIR=".Spam"
+    else
+        # Thunderbird, de-facto standard
+        JUNKDIR=".Junk"
+    fi
+        
+    if [ "${VERBOSE}" == "1" ];
+    then
+        echo "Found junk directory '${JUNKDIR}'."
+        echo "Looking for mails in ${DIR}.";
+    fi
+    if [ -d "${DIR}/.${JUNKDIR}.als Spam lernen" ];
+    then
+        for SUBDIR in new cur ;
+        do
+            find "${DIR}/.${JUNKDIR}.als Spam lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r spammail ;
+            do
+                if [ "${VERBOSE}" == "1" ];
+                then
+                    echo -e "\tEating spam \"${spammail}\". Yuk!";
+                fi
+                if [ "${DRYRUN}" == "0" ];
+                then
+                    ${BE_NICE} /package/host/localhost/dspam/bin/dspam --class=spam --source=error --stdout < "${spammail}";
+                    rm -f "${spammail}";
+                fi
+            done
+        done
+    fi
+    if [ -d "${DIR}/.${JUNKDIR}.kein Spam" ];
+    then
+        for SUBDIR in new cur ;
+        do
+            find "${DIR}/.${JUNKDIR}.kein Spam/${SUBDIR}" -type f -print0 | while read -d $'\0' -r hammail ;
+            do
+                if [ "${VERBOSE}" == "1" ];
+                then
+                    echo -e "\tEating ham \"${hammail}\". Yum!";
+                fi
+                if [ "${DRYRUN}" == "0" ];
+                then
+                    ${BE_NICE} /package/host/localhost/dspam/bin/dspam --class=innocent --source=error --stdout < "${hammail}";
+                    rm -f "${hammail}";
+                fi
+            done
+        done
+    fi
+done
+
+if [ "${VERBOSE}" == "1" ];
+then
+    echo "Done looking for mails.";
+fi
+
