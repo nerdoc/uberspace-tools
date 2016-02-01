@@ -21,4 +21,4 @@ ln -sf ~/etc/dspam_clean_hashdb ~/service
 
 
 # install mailfilter file
-cp "~/$this/mailfilter.tpl" ~/.mailfilter
+cp ~/$this/mailfilter.tpl ~/.mailfilter
