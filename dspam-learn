@@ -82,7 +82,7 @@ fi
 do
     if [ "${VERBOSE}" == "1" ];
     then
-        echo "Determining Junk directory in ${DIR}.";
+        echo "Trying to find Junk directory in ${DIR}.";
     fi
     
     # Thunderbird, de-facto standard
