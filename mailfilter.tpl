@@ -59,10 +59,10 @@ if( $RETURNCODE == 1 )
 {
   `maildirmake "$MAILDIR/$JUNKDIR.als Spam lernen"`
 }
-`test -d "$MAILDIR/$JUNKDIR.kein Spam"`
+`test -d "$MAILDIR/$JUNKDIR.als Ham lernen"`
 if( $RETURNCODE == 1 )
 {
-  `maildirmake "$MAILDIR/$JUNKDIR.kein Spam"`
+  `maildirmake "$MAILDIR/$JUNKDIR.als Ham lernen"`
 }
  
 # show the mail to SpamAssassin

@@ -33,10 +33,10 @@ set -euo pipefail
 #          \
 #           \___ als Spam lernen
 #            \
-#             \___ kein Spam
+#             \___ als Ham lernen
 #
 # If it finds this folder structure in any maildir, it will show files
-# from the folders 'kein Spam' and 'als Spam lernen' to DSPAM (so
+# from the folders 'als Ham lernen' and 'als Spam lernen' to DSPAM (so
 # it can learn) and after that it will delete them.
 #
 # You can make this script more verbose with '-v'.
@@ -122,11 +122,11 @@ do
             done
         done
     fi
-    if [ -d "${DIR}/.${JUNKDIR}.kein Spam" ];
+    if [ -d "${DIR}/.${JUNKDIR}.als Ham lernen" ];
     then
         for SUBDIR in new cur ;
         do
-            find "${DIR}/.${JUNKDIR}.kein Spam/${SUBDIR}" -type f -print0 | while read -d $'\0' -r hammail ;
+            find "${DIR}/.${JUNKDIR}.als Ham lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r hammail ;
             do
                 if [ "${VERBOSE}" == "1" ];
                 then
