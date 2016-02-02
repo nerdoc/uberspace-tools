@@ -26,4 +26,8 @@ So I decided to include a small check in the scripts and determine the directory
   * I think "Junk" is the mostly used one. YMMV.
   * I think Thunderbird, as open source software, deserves some respect and should be promoted.
 
+# Testing
+in the *tests* directory, execute `test_junk_folder_create.sh` for a simple suite testing. Warning: it creates the mail vuser **test** and executes some commands, e.g. sends mail to that user. If you don't want that, you can change the `$testuser` variable at the beginning of the test script.
+
+# Feedback
 Feel free to give feedback or provide pull requests.
