@@ -4,6 +4,7 @@ set -euo pipefail
 #IFS=$'\n\t'
 ########################################################################
 # 2015-02-23 Christopher Hirschmann c.hirschmann@jonaspasche.com
+# 2016-02-01 Christian González christian.gonzalez@nerdocs.at
 ########################################################################
 #
 # This program is free software: you can redistribute it and/or modify
@@ -28,7 +29,7 @@ set -euo pipefail
 # \
 #  \___ Inbox
 #   \
-#    \___ Junk
+#    \___ Junk || Spam || Junk-E-Mail
 #          \
 #           \___ als Spam lernen
 #            \
@@ -81,7 +82,7 @@ fi
 do
     if [ "${VERBOSE}" == "1" ];
     then
-        echo "Determining Junk directory in ${DIR}.";
+        echo "Trying to find Junk directory in ${DIR}.";
     fi
     
     # Thunderbird, de-facto standard
@@ -92,7 +93,7 @@ do
     then
         # Outlook
         JUNKDIR=".Junk-E-Mail"
-    elsif [ -d "${DIR}/.Spam" ];
+    elif [ -d "${DIR}/.Spam" ];
     then
         # GMail
         JUNKDIR=".Spam"

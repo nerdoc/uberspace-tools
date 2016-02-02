@@ -39,7 +39,7 @@ else
   }
 }
 
-maildirmake "$MAILDIR/$JUNKDIR"
+`maildirmake "$MAILDIR/$JUNKDIR"`
 
 `test -d "$MAILDIR/$JUNKDIR.als Spam lernen"`
 if( $RETURNCODE == 1 )
