@@ -92,7 +92,7 @@ do
     then
         # Outlook
         JUNKDIR=".Junk-E-Mail"
-    elsif [ -d "${DIR}/.Spam" ];
+    elif [ -d "${DIR}/.Spam" ];
     then
         # GMail
         JUNKDIR=".Spam"
