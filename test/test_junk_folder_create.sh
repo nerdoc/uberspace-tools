@@ -1,6 +1,9 @@
 #!/bin/sh
 
 testuser="test"
+# get a mail domain this uberspace is valid for.
+domain=`uberspace-list-domains -m |grep -v -e "^*" |cut -d" " -f1`
+echo "used domain for sending emails: $domain"
 
 if [ ! -d ~/users/test ]; then
   echo "adding test user..."
@@ -20,8 +23,8 @@ ls ~/users/$testuser/ -la | grep -e "Junk\|Spam" || echo "no Junk folders found.
 echo -e "\nexecuting maildrop on bogus mail..."
 echo | EXT=$testuser maildrop ~/.mailfilter
 
-echo -e "sending test mail to ${testuser}@medworx.at"
-echo "testcontent" | mail -s TESTMAIL ${testuser}@medworx.at
+echo -e "sending test mail to ${testuser}@${domain}"
+echo "testcontent" | mail -s TESTMAIL ${testuser}@${domain}
 
 echo -e "content of user MailDir after Junk folder creation:"
 ls ~/users/$testuser/ -la | grep -e "Junk\|Spam" || echo "no Junk folders found."
