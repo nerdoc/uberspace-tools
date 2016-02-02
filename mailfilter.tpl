@@ -20,9 +20,9 @@ if ( $EXT )
 # check folder structure
 
 # test for junk directory.
-# If all three exist, use "Junk"
+# Thunderbird + all open source/ de-facto standard style is "Junk"
+JUNKDIR=".Junk"
 
-JUNKDIR=""
 # Outlook style
 `test -d "$MAILDIR/.Junk-E-Mail"`
 if( $RETURNCODE == 0 )
@@ -37,24 +37,9 @@ else
   {
     JUNKDIR=".Spam"
   }
-  else
-  {
-
-    # Thunderbird + all open source/ de-facto standard style
-    `test -d "$MAILDIR/.Junk"`
-    if( $RETURNCODE == 0 )
-    {
-      JUNKDIR=".Junk"
-    }
-  }
 }
 
-# if no directory of the above exist, create a "Junk" directory and use that.
-if( $JUNKDIR = "" )
-{
-  JUNKDIR=".Junk"
-}
-`maildirmake "$MAILDIR/$JUNKDIR"`
+maildirmake "$MAILDIR/$JUNKDIR"
 
 `test -d "$MAILDIR/$JUNKDIR.als Spam lernen"`
 if( $RETURNCODE == 1 )
