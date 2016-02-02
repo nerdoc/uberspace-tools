@@ -37,9 +37,22 @@ else
   {
     JUNKDIR=".Spam"
   }
+  else
+  {
+    # Thunderbird and de-facto standard
+    `test -d "$MAILDIR/.Junk"`
+    if( $RETURNCODE == 0 )
+    {
+      JUNKDIR=".Junk"
+    }
+  }
 }
-
-`maildirmake "$MAILDIR/$JUNKDIR"`
+# now test if any Junkdir exists already
+`test -d "$MAILDIR/$JUNKDIR"`
+if( $RETURNCODE == 1 )
+{
+  `maildirmake "$MAILDIR/$JUNKDIR"`
+}
 
 `test -d "$MAILDIR/$JUNKDIR.als Spam lernen"`
 if( $RETURNCODE == 1 )
