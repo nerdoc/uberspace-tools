@@ -56,15 +56,15 @@ if( $JUNKDIR = "" )
 }
 `maildirmake "$MAILDIR/$JUNKDIR"`
 
-`test -d "$MAILDIR/.Junk.als Spam lernen"`
+`test -d "$MAILDIR/$JUNKDIR.als Spam lernen"`
 if( $RETURNCODE == 1 )
 {
-  `maildirmake "$MAILDIR/.Junk.als Spam lernen"`
+  `maildirmake "$MAILDIR/$JUNKDIR.als Spam lernen"`
 }
-`test -d "$MAILDIR/.Junk.kein Spam"`
+`test -d "$MAILDIR/$JUNKDIR.kein Spam"`
 if( $RETURNCODE == 1 )
 {
-  `maildirmake "$MAILDIR/.Junk.kein Spam"`
+  `maildirmake "$MAILDIR/$JUNKDIR.kein Spam"`
 }
  
 # show the mail to SpamAssassin
