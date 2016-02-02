@@ -84,6 +84,10 @@ do
         echo "Determining Junk directory in ${DIR}.";
     fi
     
+    # Thunderbird, de-facto standard
+    # used, if nothing else found.
+    JUNKDIR=".Junk"
+    
     if [ -d "${DIR}/.Junk-E-Mail" ];
     then
         # Outlook
@@ -92,9 +96,6 @@ do
     then
         # GMail
         JUNKDIR=".Spam"
-    else
-        # Thunderbird, de-facto standard
-        JUNKDIR=".Junk"
     fi
         
     if [ "${VERBOSE}" == "1" ];
