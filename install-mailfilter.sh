@@ -8,7 +8,7 @@ this="uberspace-mail-tools"
 #install DSPAM
 echo "Installing DSPAM service..."
 test -d ~/service || uberspace-setup-svscan
-runwhen-conf ~/etc/dspam-learn "~/$this/dspam-learn"
+runwhen-conf ~/etc/dspam-learn ~/$this/dspam-learn
 sed -i -e "s/^RUNWHEN=.*/RUNWHEN=\",M=`awk 'BEGIN { srand(); printf("%d\n",rand()*60) }'`\"/" ~/etc/dspam-learn/run
 ln -sf ~/etc/dspam-learn ~/service
 
