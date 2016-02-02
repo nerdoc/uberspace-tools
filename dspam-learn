@@ -29,7 +29,7 @@ set -euo pipefail
 # \
 #  \___ Inbox
 #   \
-#    \___ Junk
+#    \___ Junk || Spam || Junk-E-Mail
 #          \
 #           \___ als Spam lernen
 #            \
