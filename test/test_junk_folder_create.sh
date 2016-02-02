@@ -2,7 +2,7 @@
 
 testuser="test"
 # get a mail domain this uberspace is valid for.
-domain=`uberspace-list-domains -m |grep -v -e "^*" |cut -d" " -f1`
+domain=`uberspace-list-domains -m |grep -v -e "^*" -m1 |cut -d" " -f1`
 echo "used domain for sending emails: $domain"
 
 if [ ! -d ~/users/test ]; then
