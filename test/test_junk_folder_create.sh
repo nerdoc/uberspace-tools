@@ -26,7 +26,7 @@ echo "testcontent" | mail -s TESTMAIL ${testuser}@medworx.at
 echo -e "content of user MailDir after Junk folder creation:"
 ls ~/users/$testuser/ -la | grep -e "Junk\|Spam" || echo "no Junk folders found."
 
-echo "You have to delete the $testuser user manually if you don't need it any more."
+echo -e "\nYou have to delete the $testuser user manually if you don't need it any more."
 echo "To do so please just execute"
 echo
 echo "   vdeluser test"
