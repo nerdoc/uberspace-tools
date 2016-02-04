@@ -20,9 +20,6 @@
 
 this="uberspace-mail-tools"
 
-# install SpamAssassin
-
-
 #install DSPAM
 echo "Installing DSPAM service..."
 test -d ~/service || uberspace-setup-svscan
