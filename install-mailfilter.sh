@@ -44,3 +44,6 @@ ln -sf ~/etc/dspam_clean_hashdb ~/service
 # install mailfilter file
 cp ~/$this/mailfilter.tpl ~/.mailfilter
 chmod 600 ~/.mailfilter
+
+# install mailfilter into qmail-default
+echo -n "|maildrop" > ~/.qmail-default
