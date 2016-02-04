@@ -27,7 +27,7 @@ this="uberspace-mail-tools"
 echo "Installing DSPAM service..."
 test -d ~/service || uberspace-setup-svscan
 test -d ~/etc/dspam-learn && rm -rf ~/etc/dspam-learn
-runwhen-conf ~/etc/dspam-learn ~/$this/dspam-learn
+runwhen-conf ~/etc/dspam-learn ~/$this/dspam-learn > /dev/null
 sed -i -e "s/^RUNWHEN=.*/RUNWHEN=\",M=`awk 'BEGIN { srand(); printf("%d\n",rand()*60) }'`\"/" ~/etc/dspam-learn/run
 ln -sf ~/etc/dspam-learn ~/service
 
@@ -36,7 +36,7 @@ ln -sf ~/etc/dspam-learn ~/service
 echo "Installing DSPAM cleanup service..."
 test -d ~/service || uberspace-setup-svscan
 test -d ~/etc/dspam_clean_hashdb && rm -rf ~/etc/dspam_clean_hashdb
-runwhen-conf ~/etc/dspam_clean_hashdb "/usr/local/bin/dspam_clean_hashdb"
+runwhen-conf ~/etc/dspam_clean_hashdb "/usr/local/bin/dspam_clean_hashdb" > /dev/null
 sed -i -e "s/^RUNWHEN=.*/RUNWHEN=\",H=`awk 'BEGIN { srand(); printf("%d\n",rand()*24) }'`\"/" ~/etc/dspam_clean_hashdb/run
 ln -sf ~/etc/dspam_clean_hashdb ~/service
 
