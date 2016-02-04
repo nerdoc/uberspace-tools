@@ -36,8 +36,10 @@ sed -i -e "s/^RUNWHEN=.*/RUNWHEN=\",H=`awk 'BEGIN { srand(); printf("%d\n",rand(
 ln -sf ~/etc/dspam_clean_hashdb ~/service
 
 # install mailfilter file
+echo "Installing mailfilter file to ~/.mailfilter..."
 cp ~/$this/mailfilter.tpl ~/.mailfilter
 chmod 600 ~/.mailfilter
 
 # install mailfilter into qmail-default
+echo "Activating maildrop for all users..."
 echo -n "|maildrop" > ~/.qmail-default
