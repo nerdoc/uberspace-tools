@@ -34,7 +34,6 @@ ln -sf ~/etc/dspam-learn ~/service
 
 # install DSPAM cleanup service
 echo "Installing DSPAM cleanup service..."
-test -d ~/service || uberspace-setup-svscan
 test -d ~/etc/dspam_clean_hashdb && rm -rf ~/etc/dspam_clean_hashdb
 runwhen-conf ~/etc/dspam_clean_hashdb "/usr/local/bin/dspam_clean_hashdb" > /dev/null
 sed -i -e "s/^RUNWHEN=.*/RUNWHEN=\",H=`awk 'BEGIN { srand(); printf("%d\n",rand()*24) }'`\"/" ~/etc/dspam_clean_hashdb/run
