@@ -69,10 +69,7 @@ else
     BE_NICE="nice -n 19 ionice -c3";
 fi
 
-if [ "${DRYRUN}" == "1" ];
-then
-    echo "Running in dry run mode."
-fi
+[ "${DRYRUN}" == "1" ] && echo "Running in dry run mode."
 
 # to be able to process directory and file names regardless of any kind
 # of weird characters we need to list these names separated by null
@@ -80,11 +77,7 @@ fi
 
 ( find ${HOME} -name Maildir -print0 ; if [ -d ${HOME}/users ]; then find ${HOME}/users/ -mindepth 1 -maxdepth 1 -print0 ; fi )| while read -d $'\0' -r DIR ;
 do
-    if [ "${VERBOSE}" == "1" ];
-    then
-        echo
-        echo "Trying to find Junk directory in ${DIR}.";
-    fi
+    [ "${VERBOSE}" == "1" ] && echo -e "\nTrying to find Junk directory in ${DIR}.";
     
     # Thunderbird, de-facto standard
     # used, if nothing else found.
@@ -111,10 +104,7 @@ do
         do
             find "${DIR}/.${JUNKDIR}.als Spam lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r spammail ;
             do
-                if [ "${VERBOSE}" == "1" ];
-                then
-                    echo -e "\tEating spam \"${spammail}\". Yuk!";
-                fi
+                [ "${VERBOSE}" == "1" ] && echo -e "\tEating spam \"${spammail}\". Yuk!"
                 if [ "${DRYRUN}" == "0" ];
                 then
                     ${BE_NICE} /package/host/localhost/dspam/bin/dspam --class=spam --source=error --stdout < "${spammail}";
@@ -129,10 +119,7 @@ do
         do
             find "${DIR}/.${JUNKDIR}.als Ham lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r hammail ;
             do
-                if [ "${VERBOSE}" == "1" ];
-                then
-                    echo -e "\tEating ham \"${hammail}\". Yum!";
-                fi
+                [ "${VERBOSE}" == "1" ] && echo -e "\tEating ham \"${hammail}\". Yum!"
                 if [ "${DRYRUN}" == "0" ];
                 then
                     ${BE_NICE} /package/host/localhost/dspam/bin/dspam --class=innocent --source=error --stdout < "${hammail}";
@@ -143,8 +130,5 @@ do
     fi
 done
 
-if [ "${VERBOSE}" == "1" ];
-then
-    echo "Done looking for mails.";
-fi
+[ "${VERBOSE}" == "1" ] && echo "Done looking for mails."
 
