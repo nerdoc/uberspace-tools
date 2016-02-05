@@ -98,11 +98,11 @@ do
         echo -e "Found junk directory ${DIR}/${JUNKDIR}."
         echo -e "Looking for mails in ${DIR}.";
     fi
-    if [ -d "${DIR}/.${JUNKDIR}.als Spam lernen" ];
+    if [ -d "${DIR}/${JUNKDIR}.als Spam lernen" ];
     then
         for SUBDIR in new cur ;
         do
-            find "${DIR}/.${JUNKDIR}.als Spam lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r spammail ;
+            find "${DIR}/${JUNKDIR}.als Spam lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r spammail ;
             do
                 [ "${VERBOSE}" == "1" ] && echo -e "\tEating spam \"${spammail}\". Yuk!"
                 if [ "${DRYRUN}" == "0" ];
@@ -113,13 +113,13 @@ do
             done
         done
     else
-        [ "${VERBOSE}" == "1" ] && echo -e "\t'als Spam lernen' not found in ${DIR}/.${JUNKDIR}."
+        [ "${VERBOSE}" == "1" ] && echo -e "\t'als Spam lernen' not found in ${DIR}/${JUNKDIR}."
     fi
-    if [ -d "${DIR}/.${JUNKDIR}.als Ham lernen" ];
+    if [ -d "${DIR}/${JUNKDIR}.als Ham lernen" ];
     then
         for SUBDIR in new cur ;
         do
-            find "${DIR}/.${JUNKDIR}.als Ham lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r hammail ;
+            find "${DIR}/${JUNKDIR}.als Ham lernen/${SUBDIR}" -type f -print0 | while read -d $'\0' -r hammail ;
             do
                 [ "${VERBOSE}" == "1" ] && echo -e "\tEating ham \"${hammail}\". Yum!"
                 if [ "${DRYRUN}" == "0" ];
@@ -130,7 +130,7 @@ do
             done
         done
     else
-        [ "${VERBOSE}" == "1" ] && echo -e "\t'als Ham lernen' not found in ${DIR}/.${JUNKDIR}."
+        [ "${VERBOSE}" == "1" ] && echo -e "\t'als Ham lernen' not found in ${DIR}/${JUNKDIR}."
     fi
 done
 
