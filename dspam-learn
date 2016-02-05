@@ -101,7 +101,7 @@ do
         
     if [ "${VERBOSE}" == "1" ];
     then
-        echo "Found junk directory '${DIR}/${JUNKDIR}'."
+        echo "Found junk directory ${DIR}/${JUNKDIR}."
         echo "Looking for mails in ${DIR}.";
     fi
     if [ -d "${DIR}/.${JUNKDIR}.als Spam lernen" ];
