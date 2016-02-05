@@ -112,6 +112,8 @@ do
                 fi
             done
         done
+    else
+        [ "${VERBOSE}" == "1" ] && echo -e "\t'als Spam lernen' not found in ${DIR}/.${JUNKDIR}."
     fi
     if [ -d "${DIR}/.${JUNKDIR}.als Ham lernen" ];
     then
@@ -127,6 +129,8 @@ do
                 fi
             done
         done
+    else
+        [ "${VERBOSE}" == "1" ] && echo -e "\t'als Ham lernen' not found in ${DIR}/.${JUNKDIR}."
     fi
 done
 
