@@ -103,7 +103,7 @@ do
     then
         echo
         echo "Looking for mails in ${DIR}.";
-        echo "\tFound junk directory ${DIR}/${JUNKDIR}."
+        echo -e "\tFound junk directory ${DIR}/${JUNKDIR}."
     fi
     if [ -d "${DIR}/.${JUNKDIR}.als Spam lernen" ];
     then
