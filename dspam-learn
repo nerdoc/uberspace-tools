@@ -82,6 +82,7 @@ fi
 do
     if [ "${VERBOSE}" == "1" ];
     then
+        echo
         echo "Trying to find Junk directory in ${DIR}.";
     fi
     
@@ -101,9 +102,8 @@ do
         
     if [ "${VERBOSE}" == "1" ];
     then
-        echo
-        echo "Looking for mails in ${DIR}.";
-        echo -e "\tFound junk directory ${DIR}/${JUNKDIR}."
+        echo -e "Found junk directory ${DIR}/${JUNKDIR}."
+        echo -e "Looking for mails in ${DIR}.";
     fi
     if [ -d "${DIR}/.${JUNKDIR}.als Spam lernen" ];
     then
