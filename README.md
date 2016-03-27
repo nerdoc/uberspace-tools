@@ -15,7 +15,7 @@ in your uberspace $HOME directory, and call
 
     sh ~/uberspace-tools/install-mailfilter.sh
 
-afterwords.
+afterwards.
 
 # Junk folder
 
