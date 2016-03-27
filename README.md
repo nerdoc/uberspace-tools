@@ -1,6 +1,6 @@
 # uberspace-tools
 
-This is a small repository to automate often-needed tasks on more than one Uberspace accounts.
+This is a small repository to automate often-needed tasks on more than one Uberspace account.
 
 * setting up a mailfilter config on an Uberspace server.
 * renewing LetsEncrypt certificates
