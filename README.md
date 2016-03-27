@@ -9,7 +9,7 @@ The `install-mailfilter.sh script` takes care of adding the **SpamAssassin** and
 
 You can simply do a
 
-    clone git@github.com:nerdoc/uberspace-tools.git
+    git clone git@github.com:nerdoc/uberspace-tools.git
 
 in your Uberspace $HOME directory, and call
 
