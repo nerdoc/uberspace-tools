@@ -19,7 +19,7 @@ afterwards.
 
 # Junk folder
 
-There is no real standardized name for the IMAP junk folder in the net. Different email programs use different names, e.g.
+There is no real standardized name for the IMAP junk folder on the net. Different email programs use different names, e.g.
 
   * Outlook: *Junk-E-Mail*
   * GMail: *Spam*
