@@ -1,8 +1,8 @@
 # uberspace-tools
 
-This is a small repository to automate often-needed tasks on more than one Uberspace account.
+This is a small repository to automate often-needed tasks on more than one Uberspace account:
 
-* setting up a mailfilter config on an Uberspace server.
+* setting up a mailfilter config on an Uberspace server
 * renewing LetsEncrypt certificates
 
 The `install-mailfilter.sh script` takes care of adding the **SpamAssassin** and **DSPAM** services to your Uberspace account. It installs the `.mailfilter` file into place and uses a customized *dspam-learn* and mailfilter script that tries to determine which folder is the junk folder of each user (Junk-E-Mail, Spam, Junk).
