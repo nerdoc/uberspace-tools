@@ -5,11 +5,50 @@ cert_dir=${letsencrypt_dir}/live
 cert_file='cert.pem'
 domain=$(grep -e "[ \t]*domains.*" ~/.config/letsencrypt/cli.ini| sed "s/ //g" |cut -d "=" -f2 | cut -d "," -f1)
 
+
+usage() {
+  cat >&2 <<__EOF__
+
+Usage:
+$0  [-s wait-time]
+
+Parameters:
+  wait-time        time in seconds to wait before checking for
+                   certificate renewal
+
+__EOF__
+
+}
+
+
 if [ "$domain" == "" ]; then
   echo "the 'domains' variable in ${letsencrypt_dir} seems to be malformed or missing."
   echo "Please check this file. (Hint: have you run uberspace-letsencrypt already?)"
   exit 1
 fi
+
+# process arguments
+while getopts ":s:" opt; do
+  case "$opt" in
+    s)
+      # sleep x seconds - if x is an integer, else do nothing
+      re='^[0-9]+$'
+      if [[ "$OPTARG" =~ $re ]] ; then
+        sleep $OPTARG
+      else
+        echo "Invalid option: -$OPTARG is no Integer" >&2
+        usage
+      fi
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+#shift $((OPTIND-1))
+
 
 # find all certificates
 export cert="$(find $cert_dir/$domain/ -iname $cert_file | sort -k1)"
