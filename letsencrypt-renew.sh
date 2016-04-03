@@ -1,6 +1,6 @@
 #!/bin/sh
 valid_days=10
-letsencrypt_dir="~/.config/letsencrypt"
+letsencrypt_dir=~/.config/letsencrypt
 cert_dir=${letsencrypt_dir}/live
 cert_file='cert.pem'
 domain=$(grep -e "[ \t]*domains.*" ${letsencrypt_dir}/cli.ini| sed "s/ //g" |cut -d "=" -f2 | cut -d "," -f1)
