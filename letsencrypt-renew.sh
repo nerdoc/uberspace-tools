@@ -1,5 +1,5 @@
 #!/bin/sh
-valid_days=10
+valid_days=21
 letsencrypt_dir=~/.config/letsencrypt
 cert_dir=${letsencrypt_dir}/live
 cert_file='cert.pem'
