@@ -12,8 +12,8 @@ usage() {
 Usage:
 $0  [-s wait-time]
 
-Parameters:
-  wait-time        time in seconds to wait before checking for
+Options:
+  -s wait-time     time in seconds to wait before checking for
                    certificate renewal
 
 __EOF__
