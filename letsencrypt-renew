@@ -4,17 +4,18 @@ letsencrypt_dir=~/.config/letsencrypt
 cert_dir=${letsencrypt_dir}/live
 cert_file='cert.pem'
 domain=$(grep -e "[ \t]*domains.*" ${letsencrypt_dir}/cli.ini| sed "s/ //g" |cut -d "=" -f2 | cut -d "," -f1)
-
+force=0
 
 usage() {
   cat >&2 <<__EOF__
 
 Usage:
-$0  [-s wait-time]
+$0  [-s wait-time] [-f]
 
 Options:
   -s wait-time     time in seconds to wait before checking for
                    certificate renewal
+  -f               force renewal, even if certificate is still valid
 
 __EOF__
 
@@ -28,7 +29,7 @@ if [ "$domain" == "" ]; then
 fi
 
 # process arguments
-while getopts ":s:" opt; do
+while getopts ":s:f" opt; do
   case "$opt" in
     s)
       # sleep x seconds - if x is an integer, else do nothing
@@ -40,6 +41,8 @@ while getopts ":s:" opt; do
         usage
       fi
       ;;
+    f)
+      force=1
     \?)
       echo "Invalid option: -$OPTARG" >&2
       usage
@@ -57,7 +60,7 @@ export cert="$(find $cert_dir/$domain/ -iname $cert_file | sort -k1)"
 openssl x509 -checkend $(( $valid_days * 86400 )) -in "$cert" > /dev/null
 
 # renew certificates if they are less than only 10 more days valid
-if [ $? != 0 ]; then
+if [ $? != 0 -o "$force" == 1 ]; then
    letsencrypt certonly -d $domain
    uberspace-prepare-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
 fi
