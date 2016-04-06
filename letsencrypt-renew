@@ -43,6 +43,7 @@ while getopts ":s:f" opt; do
       ;;
     f)
       force=1
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       usage
