@@ -38,11 +38,10 @@ wrote a small script that efficiently renews the certificate.
 
 I recommend to call it @weekly (@daily is no problem neither) from cron, using `crontab -e`, and adding the line
 
-    @weekly /home/$USER/uberspace-tools/letsencrypt-renew.sh -s 29
+    @weekly ~/uberspace-tools/letsencrypt-renew.sh -s 29
 
 * The `-s <int>` parameter delays the renewing for <int> seconds - which helps uberspace kepp their performance - as not all scripts fire
 at the same time. Use a random value (between 0 and ~500) here.
-* Certainly replace $USER with your uberspace user name.
 
 # Testing
 In the `tests` directory, execute `test_junk_folder_create.sh` to perfom a simple test of the suite. Warning: it creates the mail vuser **test** and executes some commands, e.g. sends mail to that user. If you don't want that, you can change the `$testuser` variable at the beginning of the test script.
