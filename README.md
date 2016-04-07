@@ -18,6 +18,8 @@ in your Uberspace $HOME directory, and call
 
 afterwards.
 
+**CAUTION**: The script overwrites your existing `~/.mailfilter` file without prompt! Please make sure you don't have any customizations there!
+
 ### Junk folder
 
 There is no real standardized name for the IMAP junk folder on the net. Different email programs use different names, e.g.
