@@ -18,7 +18,8 @@
 #
 ########################################################################
 
-this="uberspace-mail-tools"
+# change this to the directory you cloned it into
+this="uberspace-tools"
 
 # install DSPAM
 echo "Installing DSPAM service..."
