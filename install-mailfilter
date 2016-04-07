@@ -24,7 +24,7 @@ this="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "Installing DSPAM service..."
 test -d ~/service || uberspace-setup-svscan
 test -d ~/etc/dspam-learn && rm -rf ~/etc/dspam-learn
-runwhen-conf ~/etc/dspam-learn ~/$this/dspam-learn > /dev/null
+runwhen-conf ~/etc/dspam-learn $this/dspam-learn > /dev/null
 sed -i -e "s/^RUNWHEN=.*/RUNWHEN=\",M=`awk 'BEGIN { srand(); printf("%d\n",rand()*60) }'`\"/" ~/etc/dspam-learn/run
 ln -sf ~/etc/dspam-learn ~/service
 
@@ -37,7 +37,7 @@ ln -sf ~/etc/dspam_clean_hashdb ~/service
 
 # install mailfilter file
 echo "Installing mailfilter file to ~/.mailfilter..."
-cp ~/$this/mailfilter.tpl ~/.mailfilter
+cp $this/mailfilter.tpl ~/.mailfilter
 chmod 600 ~/.mailfilter
 
 # install mailfilter into qmail-default
