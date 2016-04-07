@@ -96,7 +96,7 @@ if ( ! /^X-DSPAM-Result: Whitelisted/)
   if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
   {
     SUBJ =~ /^Subj: .*$/
-    log "DSMAP: Spam detected:"
+    log "DSPMA: Spam detected:"
     MAILDIR="$MAILDIR/$JUNKDIR"
     # mark as read
     cc "$MAILDIR";
