@@ -91,21 +91,23 @@ xfilter "/usr/bin/spamc"
 # now show the mail to DSPAM
 xfilter "/package/host/localhost/dspam/bin/dspam --mode=teft --deliver=innocent,spam --stdout"
  
-# if whitelisted by DSPAM just deliver
-if ( /^X-DSPAM-Result: Whitelisted/)
+if ( ! /^X-DSPAM-Result: Whitelisted/)
 {
-  to "$MAILDIR"
+  if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
+  {
+    SUBJ =~ /^Subj: .*$/
+    log "DSMAP: Spam detected:"
+    MAILDIR="$MAILDIR/$JUNKDIR"
+    # mark as read
+    cc "$MAILDIR";
+    `find "$MAILDIR/new/" -mindepth 1 -maxdepth 1 -type f -printf '%f\0' | xargs -0 -I {} mv "$MAILDIR/new/{}" "$MAILDIR/cur/{}:2,S"`
+    exit
+  }
 }
- 
-# process SPAM
-if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
+else
 {
-  MAILDIR="$MAILDIR/$JUNKDIR"
-  # mark as read
-  cc "$MAILDIR";
-  `find "$MAILDIR/new/" -mindepth 1 -maxdepth 1 -type f -printf '%f\0' | xargs -0 -I {} mv "$MAILDIR/new/{}" "$MAILDIR/cur/{}:2,S"`
-  exit
+  log "DSPAM: Whitelisted:"
 }
- 
+
 # and finally, deliver everything that survived our filtering
 to "$MAILDIR"
