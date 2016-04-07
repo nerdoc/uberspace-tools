@@ -18,8 +18,7 @@
 #
 ########################################################################
 
-# change this to the directory you cloned it into
-this="uberspace-tools"
+this="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # install DSPAM
 echo "Installing DSPAM service..."
