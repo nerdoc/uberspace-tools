@@ -10,15 +10,15 @@ The `install-mailfilter` script takes care of adding the **SpamAssassin** and **
 
 Please contact me if you know a better approach here.
 
-You can simply do a
-
     git clone git@github.com:nerdoc/uberspace-tools.git
 
 in your Uberspace $HOME directory, and call
 
-    sh ~/uberspace-tools/install-mailfilter.sh
+    ~/uberspace-tools/install-mailfilter
 
 afterwards.
+
+**CAUTION**: The script overwrites your existing `~/.mailfilter` file without prompt! Please make sure you don't have any customizations there!
 
 ### Junk folder
 
@@ -40,7 +40,7 @@ wrote a small script that efficiently renews the certificate.
 
 I recommend to call it @weekly (@daily is no problem neither) from cron, using `crontab -e`, and adding the line
 
-    @weekly ~/uberspace-tools/letsencrypt-renew.sh -s 29
+    @weekly ~/uberspace-tools/letsencrypt-renew -s 29
 
 * The `-s <int>` parameter delays the renewing for <int> seconds - which helps uberspace kepp their performance - as not all scripts fire
 at the same time. Use a random value (between 0 and ~500) here.

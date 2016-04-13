@@ -97,21 +97,23 @@ xfilter "/usr/bin/spamc"
 # now show the mail to DSPAM
 xfilter "/package/host/localhost/dspam/bin/dspam --mode=teft --deliver=innocent,spam --stdout"
 
-# if whitelisted by DSPAM just deliver
-if ( /^X-DSPAM-Result: Whitelisted/)
+f ( ! /^X-DSPAM-Result: Whitelisted/)
 {
-  to "$MAILDIR"
+  if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
+  {
+    log "DSPMA: Spam detected:"
+    MAILDIR="$MAILDIR/$JUNKDIR"
+    # mark as read
+    cc "$MAILDIR";
+    `find "$MAILDIR/new/" -mindepth 1 -maxdepth 1 -type f -printf '%f\0' | xargs -0 -I {} mv "$MAILDIR/new/{}" "$MAILDIR/cur/{}:2,S"`
+    exit
+  }
+}
+else
+{
+  log "DSPAM: Whitelisted:"
 }
 
-# process SPAM
-if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
-{
-  MAILDIR="$MAILDIR/$JUNKDIR"
-  # mark as read
-  cc "$MAILDIR";
-  `find "$MAILDIR/new/" -mindepth 1 -maxdepth 1 -type f -printf '%f\0' | xargs -0 -I {} mv "$MAILDIR/new/{}" "$MAILDIR/cur/{}:2,S"`
-  exit
-}
 
 # Then look for a local ".mailfilter.rules" file, and include it if it exists
 # You can add some custom filters there without touching this file here
