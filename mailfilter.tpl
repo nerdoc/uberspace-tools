@@ -3,6 +3,8 @@
 # 2016-02-01 Christian González christian.gonzalez@nerdocs.at
 ########################################################################
 #
+# This file is part of the uberspace-tools suite.
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -18,12 +20,16 @@
 #
 ########################################################################
 
-MAXSPAMSCORE="3" 
+# WARNING: This file is auto-generated. All customizations will be lost
+# if you run 'install-mailfilter' again.
+# Please put any custom rules into ~/mailfilter.rules
+
+MAXSPAMSCORE="3"
 logfile "$HOME/mailfilter.log"
- 
+
 # set default Maildir
 MAILDIR="$HOME/Maildir"
- 
+
 # check if we're called from a .qmail-EXT instead of .qmail
 import EXT
 if ( $EXT )
@@ -36,7 +42,7 @@ if ( $EXT )
     MAILDIR="$HOME/$CHECKMAILDIR"
   }
 }
- 
+
 # check folder structure
 
 # test for junk directory.
@@ -49,7 +55,7 @@ if( $RETURNCODE == 0 )
 {
   JUNKDIR=".Junk-E-Mail"
 }
-else 
+else
 {
   # Gmail style
   `test -d "$MAILDIR/.Spam"`
@@ -84,19 +90,19 @@ if( $RETURNCODE == 1 )
 {
   `maildirmake "$MAILDIR/$JUNKDIR.als Ham lernen"`
 }
- 
+
 # show the mail to SpamAssassin
 xfilter "/usr/bin/spamc"
- 
+
 # now show the mail to DSPAM
 xfilter "/package/host/localhost/dspam/bin/dspam --mode=teft --deliver=innocent,spam --stdout"
- 
+
 # if whitelisted by DSPAM just deliver
 if ( /^X-DSPAM-Result: Whitelisted/)
 {
   to "$MAILDIR"
 }
- 
+
 # process SPAM
 if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
 {
@@ -106,6 +112,14 @@ if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
   `find "$MAILDIR/new/" -mindepth 1 -maxdepth 1 -type f -printf '%f\0' | xargs -0 -I {} mv "$MAILDIR/new/{}" "$MAILDIR/cur/{}:2,S"`
   exit
 }
- 
+
+# Then look for a local ".mailfilter.rules" file, and include it if it exists
+# You can add some custom filters there without touching this file here
+`test -f "$HOME/.mailfilter.rules"`
+if( $RETURNCODE == 0 )
+{
+  include "$HOME/.mailfilter.rules"
+}
+
 # and finally, deliver everything that survived our filtering
 to "$MAILDIR"
