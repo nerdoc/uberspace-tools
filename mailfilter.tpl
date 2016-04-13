@@ -97,7 +97,7 @@ xfilter "/usr/bin/spamc"
 # now show the mail to DSPAM
 xfilter "/package/host/localhost/dspam/bin/dspam --mode=teft --deliver=innocent,spam --stdout"
 
-f ( ! /^X-DSPAM-Result: Whitelisted/)
+if ( ! /^X-DSPAM-Result: Whitelisted/)
 {
   if ( /^X-Spam-Level: \*{$MAXSPAMSCORE,}$/ || /^X-DSPAM-Result: Spam/)
   {
