@@ -81,15 +81,15 @@ if [ $? != 0 -o "$force" == 1 ]; then
     echo "Please check manually wether the certificate was created"
     echo "and add it to the webserver using uberspace-add-certificate."
     exit 1
-  elif [ "$new_cert" == "$cert_dir/$domain/$cert_file" ]; then
+  elif [ $(dirname "$new_cert") == "$cert_dir/$domain" ]; then
     # cert path has not changed
     uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
   else
     # cert path has changed, probably to domain.tld-0001 etc.
-    cert_dir=$(dirname $new_cert)
+    new_cert_dir=$(dirname $new_cert)
     echo "   WARNING: The path to the certificate has changed - maybe LetsEncrypt"
     echo "            has generated a new one with a new path:"
-    echo "            $cert_dir/fullchain.pem"
-    uberspace-add-certificate -k $cert_dir/privkey.pem -c $cert_dir/fullchain.pem
+    echo "            $new_cert_dir"
+    uberspace-add-certificate -k $new_cert_dir/privkey.pem -c $new_cert_dir/$cert_file
   fi
 fi
