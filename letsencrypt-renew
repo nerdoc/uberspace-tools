@@ -73,7 +73,7 @@ if [ $? != 0 -o "$force" == 1 ]; then
   # If we would just "renew" it with the old path, the new cert would be created,
   # but not used, and the old one would expire!
   #
-  # Here we search for fullchain.pem ang suck out the paths string using sed:
+  # Here we search for fullchain.pem and suck out the paths string using sed:
   new_cert=`letsencrypt certonly -d $domain | grep "/fullchain.pem" | sed "s/\(\/.*\/fullchain.pem\).*/\1/"`
 
   if [ "$new_cert" == "" ]; then
