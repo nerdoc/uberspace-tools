@@ -83,13 +83,13 @@ if [ $? != 0 -o "$force" == 1 ]; then
     exit 1
   elif [ "$new_cert" == "$cert_dir/$domain/$cert_file" ]; then
     # cert path has not changed
-    uberspace-prepare-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
+    uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
   else
     # cert path has changed, probably to domain.tld-0001 etc.
     cert_dir=$(dirname $new_cert)
     echo "   WARNING: The path to the certificate has changed - maybe LetsEncrypt"
     echo "            has generated a new one with a new path:"
     echo "            $cert_dir/fullchain.pem"
-    uberspace-prepare-certificate -k $cert_dir/privkey.pem -c $cert_dir/fullchain.pem
+    uberspace-add-certificate -k $cert_dir/privkey.pem -c $cert_dir/fullchain.pem
   fi
 fi
