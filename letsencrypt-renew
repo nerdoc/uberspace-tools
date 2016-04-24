@@ -83,6 +83,7 @@ if [ $? != 0 -o "$force" == 1 ]; then
     exit 1
   elif [ $(dirname "$new_cert") == "$cert_dir/$domain" ]; then
     # cert path has not changed
+    echo "Adding certificate from $cert_dir/$domain."
     uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
   else
     # cert path has changed, probably to domain.tld-0001 etc.
