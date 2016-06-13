@@ -1,4 +1,5 @@
 #!/bin/sh
+PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
 valid_days=21
 letsencrypt_dir="$HOME/.config/letsencrypt"
 cert_dir=${letsencrypt_dir}/live
