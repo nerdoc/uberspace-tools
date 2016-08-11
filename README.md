@@ -45,6 +45,12 @@ I recommend to call it @weekly (@daily is no problem neither) from cron, using `
 * The `-s <int>` parameter delays the renewing for <int> seconds - which helps uberspace kepp their performance - as not all scripts fire
 at the same time. Use a random value (between 0 and ~500) here.
 
+### CAUTION
+
+Let's Encrypt (especially [certbot](https://github.com/certbot/certbot)) seems to have a [bug](https://github.com/certbot/certbot/issues/2071) that prevents simple renewal when there has changed a domain name (specially if one is removed from the cli.conf file). It creates a new directory with new certificates instead of overwriting the old ones, and adds a number (-0001, -0002) to the directory, so uberspace doesn't find it any more. I tried to circumvent this problem wi a workaround, but it is not really very effective. Please double check that renewal works *after you changed something in the domain names!*
+
+**Patches/PR are very welcome here!**
+
 # Testing
 In the `tests` directory, execute `test_junk_folder_create.sh` to perfom a simple test of the suite. Warning: it creates the mail vuser **test** and executes some commands, e.g. sends mail to that user. If you don't want that, you can change the `$testuser` variable at the beginning of the test script.
 
