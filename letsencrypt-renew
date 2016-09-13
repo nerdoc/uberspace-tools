@@ -16,12 +16,36 @@ $0  [-s wait-time] [-f]
 Options:
   -s wait-time     time in seconds to wait before checking for
                    certificate renewal
+  -c               cleanup bogus certificates like domain.tld-0001, created due to a
+                   bug in letsencrypt when a domain was removed from cli.ini
   -f               force renewal, even if certificate is still valid
 
 __EOF__
 
 }
 
+cleanup_certificates() {
+  echo "WARNING: Going to remove ALL -0001, -0002 etc. files and directories"
+  echo "in ~/.config/letsencrypt - make sure there are no needed certificates there."
+  cd ${letsencrypt_dir}
+  
+  # this is a buggy workaround. Does not cover -0010 and greater numbers
+  # deletes all these files and directories without asking further.
+  # beware. May eat your dog.
+  for f in live/${domain}-000[1-9]; do
+    echo "  deleting $f..."
+    rm -rf $f;
+  done
+  for f in archive/${domain}-000[1-9]; do
+    echo "  deleting $f..."
+    rm -rf $f;
+  done
+  for f in renewal/${domain}-000[1-9].conf; do
+    echo "  deleting $f..."
+    rm -rf $f;
+  done
+  echo "Cleanup done."
+}
 
 if [ "$domain" == "" ]; then
   echo "the 'domains' variable in ${letsencrypt_dir} seems to be malformed or missing."
@@ -44,6 +68,10 @@ while getopts ":s:f" opt; do
       ;;
     f)
       force=1
+      ;;
+    c)
+      cleanup_certificates
+      exit 0
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
