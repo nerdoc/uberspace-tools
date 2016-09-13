@@ -14,6 +14,7 @@ Usage:
 $0  [-s wait-time] [-f]
 
 Options:
+  -h               show this message
   -s wait-time     time in seconds to wait before checking for
                    certificate renewal
   -c               cleanup bogus certificates like domain.tld-0001, created due to a
@@ -56,7 +57,7 @@ fi
 
 
 # process arguments
-while getopts ":cfs:" opt; do
+while getopts ":cfhs:" opt; do
   case "$opt" in
     s)
       # sleep x seconds - if x is an integer, else do nothing
@@ -68,6 +69,10 @@ while getopts ":cfs:" opt; do
         echo "Invalid option: -$OPTARG is no Integer" >&2
         usage
       fi
+      ;;
+    h)
+      usage
+      exit 0
       ;;
     f)
       force=1
