@@ -62,6 +62,7 @@ while getopts ":cfs:" opt; do
       # sleep x seconds - if x is an integer, else do nothing
       re='^[0-9]+$'
       if [[ "$OPTARG" =~ $re ]] ; then
+        echo "Sleeping $OPTARG seconds..."
         sleep $OPTARG
       else
         echo "Invalid option: -$OPTARG is no Integer" >&2
