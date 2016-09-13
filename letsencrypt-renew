@@ -47,14 +47,16 @@ cleanup_certificates() {
   echo "Cleanup done."
 }
 
+
 if [ "$domain" == "" ]; then
   echo "the 'domains' variable in ${letsencrypt_dir} seems to be malformed or missing."
   echo "Please check this file. (Hint: have you run uberspace-letsencrypt already?)"
   exit 1
 fi
 
+
 # process arguments
-while getopts ":s:f" opt; do
+while getopts ":cfs:" opt; do
   case "$opt" in
     s)
       # sleep x seconds - if x is an integer, else do nothing
@@ -81,7 +83,6 @@ while getopts ":s:f" opt; do
   esac
 done
 #shift $((OPTIND-1))
-
 
 # find all certificates
 export cert="$(find $cert_dir/$domain/ -iname $cert_file | sort -k1)"
