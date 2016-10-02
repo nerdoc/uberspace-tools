@@ -110,6 +110,8 @@ if [ $? != 0 -o "$force" == 1 ]; then
   # but not used, and the old one would expire!
   #
   # Here we search for fullchain.pem and suck out the paths string using sed:
+  # Note that this will not work if your path is too long as it gets wrapped by
+  # letsencrypt. Then the grep command may fail. So this is very unreliable.
   new_cert=`letsencrypt certonly -d $domain | grep "/fullchain.pem" | sed "s/\(\/.*\/fullchain.pem\).*/\1/"`
 
   if [ "$new_cert" == "" ]; then
