@@ -110,22 +110,31 @@ if [ $? != 0 -o "$force" == 1 ]; then
   # but not used, and the old one would expire!
   #
   # Here we search for fullchain.pem and suck out the paths string using sed:
-  # Note that this will not work if your path is too long as it gets wrapped by
-  # letsencrypt. Then the grep command may fail. So this is very unreliable.
-  new_cert=`letsencrypt certonly -d $domain | grep "/fullchain.pem" | sed "s/\(\/.*\/fullchain.pem\).*/\1/"`
-
-  if [ "$new_cert" == "" ]; then
+  # First we get the output of letsencrypt, and re-concat maybe-wrapped lines
+  # into one again, removing spaces at the beginning, and then removing all "\n"
+  output=`letsencrypt certonly -d $domain | sed "s/^ *//" |tr -d "\n"`
+  
+  if [ ! `echo $output | grep "/fullchain.pem"` ]; then
+    echo -e "letsencrypt apparently could not renew the certificate. Error output:\n"
+    echo $output
+    exit 1
+  fi
+  
+  # now we can parse it correctly and get the path of the new certificate.
+  new_cert_dir=`echo $output | sed "s/\(.* \)\(\/.*\/fullchain.pem\)\(.*\)/\2/" | sed "s/\/fullchain.pem//"`
+  
+  if [ "$new_cert_dir" == "" ]; then
     echo "Error parsing the file path of the new certificate."
     echo "Please check manually wether the certificate was created"
-    echo "and add it to the webserver using uberspace-add-certificate."
+    echo -e "and add it to the webserver using uberspace-add-certificate.\n"
+    echo -e "letsencrypt output:\n$output"
     exit 1
-  elif [ $(dirname "$new_cert") == "$cert_dir/$domain" ]; then
+  elif [ "$new_cert_dir" == "$cert_dir/$domain" ]; then
     # cert path has not changed
-    echo "Adding certificate from $cert_dir/$domain."
+    echo "Adding renewed certificate from $cert_dir/$domain."
     uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
   else
     # cert path has changed, probably to domain.tld-0001 etc.
-    new_cert_dir=$(dirname $new_cert)
     echo "   WARNING: The path to the certificate has changed - maybe LetsEncrypt"
     echo "            has generated a new one with a new path:"
     echo "            $new_cert_dir"
