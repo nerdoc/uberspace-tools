@@ -115,7 +115,7 @@ if [ $? != 0 -o "$force" == 1 ]; then
   output=`letsencrypt certonly -d $domain | sed "s/^ *//" |tr -d "\n"`
   
   if [ ! `echo $output | grep "/fullchain.pem"` ]; then
-    echo -e "letsencrypt apparently could not renew the certificate. Error output:\n"
+    echo -e "Let's Encrypt apparently could not renew the certificate. Error output:\n"
     echo $output
     exit 1
   fi
@@ -135,10 +135,10 @@ if [ $? != 0 -o "$force" == 1 ]; then
     uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
   else
     # cert path has changed, probably to domain.tld-0001 etc.
-    echo "   WARNING: The path to the certificate has changed - maybe LetsEncrypt"
+    echo "   WARNING: The path to the certificate has changed - maybe Let's Encrypt"
     echo "            has generated a new one with a new path:"
     echo "            $new_cert_dir"
-    echo "            This is a known problem of LetsEncrypt"
+    echo "            This is a known problem of Let's Encrypt"
     echo "            Trying to workaround the problem and add the new certificate with the new path."
     uberspace-add-certificate -k $new_cert_dir/privkey.pem -c $new_cert_dir/$cert_file
   fi
