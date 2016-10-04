@@ -114,7 +114,7 @@ if [ $? != 0 -o "$force" == 1 ]; then
   # into one again, removing spaces at the beginning, and then removing all "\n"
   output=`letsencrypt certonly -d $domain | sed "s/^ *//" |tr -d "\n"`
   
-  if ! `echo $output | grep "/fullchain.pem"`; then
+  if ! echo $output | grep "/fullchain.pem"; then
     echo -e "Let's Encrypt apparently could not renew the certificate. Error output:\n"
     echo $output
     exit 1
