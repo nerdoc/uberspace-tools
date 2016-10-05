@@ -121,7 +121,10 @@ if [ $? != 0 -o "$force" == 1 ]; then
   fi
   
   # now we can parse it correctly and get the path of the new certificate.
-  new_cert_dir=`echo $output | sed "s/\(.* \)\(\/.*\/fullchain.pem\)\(.*\)/\2/" | sed "s/\/fullchain.pem//"`
+  # first make sure that "fullchain.pem" is a part of the output. This is necessary
+  # as sed regex grouping does return the whole string if the group is not found.
+  # Then cut the path out of the letsencrypt command's output
+  new_cert_dir=`echo $output | grep "fullchain.pem" | sed -r "s/(^.+)(\/home\/.+)(\/fullchain.pem.*$)/\2/"`
   
   if [ "$new_cert_dir" == "" ]; then
     echo "Error parsing the file path of the new certificate."
