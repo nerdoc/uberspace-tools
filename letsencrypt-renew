@@ -90,15 +90,18 @@ while getopts ":cfhs:" opt; do
 done
 #shift $((OPTIND-1))
 
-# find all certificates
-export cert="$(find $cert_dir/$domain/ -iname $cert_file | sort -k1)"
+# find all certificates, put in a list
+export certs="$(find $cert_dir/$domain*/ -iname $cert_file | sort -k1)"
+
+for cert in $certs; do
 
 # check certificate validation date
 openssl x509 -checkend $(( $valid_days * 86400 )) -in "$cert" > /dev/null
 
 # renew certificates if they are less than only 10 more days valid
 if [ $? != 0 -o "$force" == 1 ]; then
-
+  echo -e "\nProcessing certificate file $cert..."
+  
   # Try to get path of new certificate from letsencrypt script.
   # This is an *ugly* hack - but I don't know another workaround for a bug
   # (or missing feature) in LetsEncrypt, see
@@ -106,43 +109,44 @@ if [ $? != 0 -o "$force" == 1 ]; then
   # Especially, if a domain.tld was removed from cli.ini, LetsEncrypt does not
   # use the old directory/certificate, but creates a new one with the ugly name
   # domain.tld-0001 - and leaves the old cert untouched.
-  # If we would just "renew" it with the old path, the new cert would be created,
-  # but not used, and the old one would expire!
-  #
-  # Here we search for fullchain.pem and suck out the paths string using sed:
-  # First we get the output of letsencrypt, and re-concat maybe-wrapped lines
-  # into one again, removing spaces at the beginning, and then removing all "\n"
-  output=`letsencrypt certonly -d $domain | sed "s/^ *//" |tr -d "\n"`
-  
-  if ! echo $output | grep "/fullchain.pem"; then
-    echo -e "Let's Encrypt apparently could not renew the certificate. Error output:\n"
-    echo $output
-    exit 1
+    # If we would just "renew" it with the old path, the new cert would be created,
+    # but not used, and the old one would expire!
+    #
+    # Here we search for fullchain.pem and suck out the paths string using sed:
+    # First we get the output of letsencrypt, and re-concat maybe-wrapped lines
+    # into one again, removing spaces at the beginning, and then removing all "\n"
+    output=`letsencrypt certonly -d $domain | sed "s/^ *//" |tr -d "\n"`
+
+    if ! echo $output | grep "/fullchain.pem"; then
+      echo -e "Let's Encrypt apparently could not renew the certificate. Error output:\n"
+      echo $output
+      exit 1
+    fi
+
+    # now we can parse it correctly and get the path of the new certificate.
+    # first make sure that "fullchain.pem" is a part of the output. This is necessary
+    # as sed regex grouping does return the whole string if the group is not found.
+    # Then cut the path out of the letsencrypt command's output
+    new_cert_dir=`echo $output | grep "fullchain.pem" | sed -r "s/(^.+)(\/home\/.+)(\/fullchain.pem.*$)/\2/"`
+
+    if [ "$new_cert_dir" == "" ]; then
+      echo "Error parsing the file path of the new certificate."
+      echo "Please check manually wether the certificate was created"
+      echo -e "and add it to the webserver using uberspace-add-certificate.\n"
+      echo -e "letsencrypt output:\n$output"
+      exit 1
+    elif [ "$new_cert_dir" == "$cert_dir/$domain" ]; then
+      # cert path has not changed
+      echo "Adding renewed certificate from $cert_dir/$domain."
+      uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
+    else
+      # cert path has changed, probably to domain.tld-0001 etc.
+      echo "   WARNING: The path to the certificate has changed - maybe Let's Encrypt"
+      echo "            has generated a new one with a new path:"
+      echo "            $new_cert_dir"
+      echo "            This is a known problem of Let's Encrypt"
+      echo "            Trying to workaround the problem and add the new certificate with the new path."
+      uberspace-add-certificate -k $new_cert_dir/privkey.pem -c $new_cert_dir/$cert_file
+    fi
   fi
-  
-  # now we can parse it correctly and get the path of the new certificate.
-  # first make sure that "fullchain.pem" is a part of the output. This is necessary
-  # as sed regex grouping does return the whole string if the group is not found.
-  # Then cut the path out of the letsencrypt command's output
-  new_cert_dir=`echo $output | grep "fullchain.pem" | sed -r "s/(^.+)(\/home\/.+)(\/fullchain.pem.*$)/\2/"`
-  
-  if [ "$new_cert_dir" == "" ]; then
-    echo "Error parsing the file path of the new certificate."
-    echo "Please check manually wether the certificate was created"
-    echo -e "and add it to the webserver using uberspace-add-certificate.\n"
-    echo -e "letsencrypt output:\n$output"
-    exit 1
-  elif [ "$new_cert_dir" == "$cert_dir/$domain" ]; then
-    # cert path has not changed
-    echo "Adding renewed certificate from $cert_dir/$domain."
-    uberspace-add-certificate -k $cert_dir/$domain/privkey.pem -c $cert_dir/$domain/$cert_file
-  else
-    # cert path has changed, probably to domain.tld-0001 etc.
-    echo "   WARNING: The path to the certificate has changed - maybe Let's Encrypt"
-    echo "            has generated a new one with a new path:"
-    echo "            $new_cert_dir"
-    echo "            This is a known problem of Let's Encrypt"
-    echo "            Trying to workaround the problem and add the new certificate with the new path."
-    uberspace-add-certificate -k $new_cert_dir/privkey.pem -c $new_cert_dir/$cert_file
-  fi
-fi
+done
