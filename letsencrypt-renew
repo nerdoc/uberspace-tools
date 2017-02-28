@@ -102,7 +102,7 @@ done
 #shift $((OPTIND-1))
 
 # get current active certificate serial
-active_serial=$(cert-info --host nerdocs.at --option -serial | cut -d "=" -f2)
+active_serial=$(cert-info --host $domain --option -serial | cut -d "=" -f2)
 
 if [ "$active_serial" = "" ]; then
   die "Could not find active certificate serial number."
