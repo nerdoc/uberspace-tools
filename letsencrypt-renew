@@ -188,7 +188,7 @@ for cert in $certs; do
     fi
 
   else # serials do not match
-    [ $DEBUG = 1 ] && echo -e "This certificate is currently not active. Continuing...\n"
+    [ $DEBUG = 1 ] && echo -e "This certificate is currently not active. Skipping...\n"
   fi
 done
 
