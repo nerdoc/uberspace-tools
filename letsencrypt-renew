@@ -70,7 +70,7 @@ while getopts ":cdfhs:" opt; do
     s)
       # sleep x seconds - if x is an integer, else do nothing
       re='^[0-9]+$'
-      if [[ "$OPTARG" =~ $re -a "$DEBUG" == 1 ]] ; then
+      if [[ "$OPTARG" =~ $re && "$DEBUG" == 1 ]] ; then
         echo "Sleeping $OPTARG seconds..."
         sleep $OPTARG
       else
@@ -104,10 +104,12 @@ done
 # get current active certificate serial
 active_serial=$(cert-info --host $domain --option -serial | cut -d "=" -f2)
 
-if [ "$active_serial" = "" ]; then
-  die "Could not find active certificate serial number."
-else
-  echo "Active serial: $active_serial"
+if [ "DEBUG" == 1] ]; then
+  if [ "$active_serial" == "" ]; then
+    die "Could not find active certificate serial number."
+  else
+    echo "Active serial: $active_serial"
+  fi
 fi
 
 # ...and compare it with the serials in all found directories:
