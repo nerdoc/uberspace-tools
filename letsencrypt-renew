@@ -121,7 +121,7 @@ export certs="$(find $cert_dir/$domain*/ -iname $cert_file | sort -k1)"
 for cert in $certs; do
 
   cert_serial=$(openssl x509 -in $cert -serial -noout | cut -d"=" -f2)
-  [ $DEBUG = 1 ] && echo -n "\n Processing certificate: $cert, serial: $cert_serial..."
+  [ $DEBUG = 1 ] && echo -e "\n Processing certificate: $cert, serial: $cert_serial..."
 
   if [ "$cert_serial" = "" ]; then
     die "Could not find certificate serial number of file '$cert'."
@@ -135,7 +135,6 @@ for cert in $certs; do
 
     # renew certificates if they are less than 10 days valid or --force is used
     if [ $? != 0 -o "$force" == 1 ]; then
-      [ $DEBUG = 1 ] && echo "Processing certificate file $cert..."
   
       # Try to get path of new certificate from letsencrypt script.
       # This is an *ugly* hack - but I don't know another workaround for a bug
