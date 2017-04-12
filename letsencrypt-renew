@@ -70,7 +70,7 @@ while getopts ":cdfhs:" opt; do
     s)
       # sleep x seconds - if x is an integer, else do nothing
       re='^[0-9]+$'
-      if [[ "$OPTARG" =~ $re ]] ; then
+      if [[ "$OPTARG" =~ $re -a "$DEBUG" == 1 ]] ; then
         echo "Sleeping $OPTARG seconds..."
         sleep $OPTARG
       else
