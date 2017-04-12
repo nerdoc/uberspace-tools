@@ -117,7 +117,7 @@ fi
 # find all certificates, put in a list
 export certs="$(find $cert_dir/$domain*/ -iname $cert_file | sort -k1)"
 
-[ $DEBUG = 1 ] && echo "Certificates: $certs"
+[ $DEBUG = 1 ] && echo -e "Certificates:\n$certs"
 for cert in $certs; do
 
   cert_serial=$(openssl x509 -in $cert -serial -noout | cut -d"=" -f2)
