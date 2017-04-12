@@ -121,7 +121,7 @@ export certs="$(find $cert_dir/$domain*/ -iname $cert_file | sort -k1)"
 for cert in $certs; do
 
   cert_serial=$(openssl x509 -in $cert -serial -noout | cut -d"=" -f2)
-  [ $DEBUG = 1 ] && echo -e "\n Processing certificate: $cert, serial: $cert_serial..."
+  [ $DEBUG = 1 ] && echo -e "\nProcessing certificate: $cert, serial: $cert_serial..."
 
   if [ "$cert_serial" = "" ]; then
     die "Could not find certificate serial number of file '$cert'."
