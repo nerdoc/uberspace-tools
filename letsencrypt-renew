@@ -190,3 +190,5 @@ for cert in $certs; do
     [ $DEBUG = 1 ] && echo -e "This certificate is currently not active. Skipping...\n"
   fi
 done
+
+[ $DEBUG = 1 ] && uberspace-list-certificates
