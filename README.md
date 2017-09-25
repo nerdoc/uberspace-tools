@@ -6,7 +6,11 @@ This is a small repository to automate often-needed tasks on more than one Ubers
 * renewing "Let's Encrypt" certificates
 
 # Mail filter
-The `install-mailfilter` script takes care of adding the **SpamAssassin** and **DSPAM** services to your Uberspace account. It installs the `mailfilter.tpl` file into `~/.mailfilter` (WARNING: overwrites `~/.mailfilter` without warning!) and uses a customized *dspam-learn* and mailfilter script that tries to determine which folder is the junk folder of each user (Junk-E-Mail, Spam, Junk). The `.mailfilter` file searches for a `~/.mailfilter.rules` file, and if it exists, includes and processes it too. This is how you can easily keep the `~/.mailfilter` file untouched and put your custom rules (like CC or other filterings) in your `.mailfilter.rules` file.
+The `install-mailfilter` script takes care of adding the **SpamAssassin** and **DSPAM** services to your Uberspace account. It installs the `mailfilter.tpl` file into `~/.mailfilter`.
+
+**CAUTION**: The script overwrites your existing `~/.mailfilter` file without prompt! Please make sure you don't have any customizations there!
+
+THis mailfilter uses a customized *dspam-learn* script and tries to determine which folder is the junk folder of each user (Junk-E-Mail, Spam, Junk). The `.mailfilter` file searches for a `~/.mailfilter.rules` file, and if it exists, includes and processes it too. This is how you can easily keep the `~/.mailfilter` file untouched and put your custom rules (like CC or other filterings) in your `.mailfilter.rules` file.
 
 Please contact me if you know a better approach here.
 
@@ -18,7 +22,6 @@ in your Uberspace $HOME directory, and call
 
 afterwards.
 
-**CAUTION**: The script overwrites your existing `~/.mailfilter` file without prompt! Please make sure you don't have any customizations there!
 
 ### Junk folder
 
