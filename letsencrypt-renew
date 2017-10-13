@@ -25,8 +25,9 @@ __EOF__
 
 }
 
+# update base directory via git
+# returns: exit status of last command, here git: 0 if 'git pull' was successful
 update_self() {
-  # update base directory via git
   cd `dirname $0`
   git pull
 }
@@ -66,7 +67,7 @@ while getopts ":cfuhs:" OPT; do
   case "$OPT" in
     u)
       echo "Updating uberspace-tools..."
-      update_self
+      update_self || exit 1
 
       # call this veryscript again, without the -u option, and with the
       # other options that are still there to parse
