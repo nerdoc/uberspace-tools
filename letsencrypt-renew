@@ -25,6 +25,12 @@ __EOF__
 
 }
 
+update_self() {
+  # update base directory via git
+  cd `dirname $0`
+  git pull
+}
+
 cleanup_certificates() {
   echo "WARNING: Going to remove ALL -0001, -0002 etc. files and directories"
   echo "in ~/.config/letsencrypt - make sure there are no needed certificates there."
@@ -56,8 +62,18 @@ if [ "$DOMAIN" == "" ]; then
 fi
 
 # process arguments
-while getopts ":cfhs:" OPT; do
+while getopts ":cfuhs:" OPT; do
   case "$OPT" in
+    u)
+      echo "Updating uberspace-tools..."
+      update_self
+
+      # call this veryscript again, without the -u option, and with the
+      # other options that are still there to parse
+      COMMANDLINE=`ps -p $$ -o args --no-headers |sed "s/-u //"`
+      ${COMMANDLINE}
+      exit 0
+      ;;
     s)
       # sleep x seconds - if x is an integer, else do nothing
       RE='^[0-9]+$'
@@ -81,13 +97,12 @@ while getopts ":cfhs:" OPT; do
       exit 0
       ;;
     \?)
-      echo "Invalid option: -$OPTARG" >&2
+      echo "Invalid option: '${OPTARG}'" >&2
       usage
       exit 1
       ;;
   esac
 done
-#shift $((OPTIND-1))
 
 # find certificate
 # this usually is the certificate in the first, original $DOMAIN dir, before
