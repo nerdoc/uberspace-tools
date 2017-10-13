@@ -29,7 +29,7 @@ __EOF__
 # returns: exit status of last command, here git: 0 if 'git pull' was successful
 update_self() {
   cd `dirname $0`
-  git pull
+  git pull > /dev/null
 }
 
 cleanup_certificates() {
