@@ -73,6 +73,9 @@ fi
 # process arguments
 while getopts ":cfuhqs:" OPT; do
   case "$OPT" in
+    q)
+      QUIET=1
+      ;;
     u)
       log "Updating uberspace-tools..."
       update_self || exit 1
@@ -104,9 +107,6 @@ while getopts ":cfuhqs:" OPT; do
     c)
       cleanup_certificates
       exit 0
-      ;;
-    q)
-      QUIET=1
       ;;
     \?)
       echo "Invalid option: '${OPTARG}'" >&2
