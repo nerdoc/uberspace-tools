@@ -21,6 +21,7 @@ Options:
   -c               cleanup bogus certificates like domain.tld-0001, created due to a
                    bug in letsencrypt when a domain was removed from cli.ini
   -f               force renewal, even if certificate is still valid
+  -q               Be quiet. Output only errors.
 
 __EOF__
 
