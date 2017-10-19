@@ -15,12 +15,13 @@ Usage:
 $0  [-s wait-time] [-f]
 
 Options:
-  -h               show this message
-  -s wait-time     time in seconds to wait before checking for
-                   certificate renewal
-  -c               cleanup bogus certificates like domain.tld-0001, created due to a
+  -h               Show this message
+  -s wait-time     Time in seconds to wait before checking for
+                   certificate renewal, useful for Uberspace servers, where many instances 
+		   of this script are run via crontab @daily
+  -c               Cleanup bogus certificates like domain.tld-0001, created due to a
                    bug in letsencrypt when a domain was removed from cli.ini
-  -f               force renewal, even if certificate is still valid
+  -f               Force renewal, even if certificate is still valid
   -q               Be quiet. Output only errors.
 
 __EOF__
