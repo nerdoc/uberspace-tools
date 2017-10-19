@@ -6,6 +6,7 @@ CERT_DIR=${LETSENCRYPT_DIR}/live
 CERT_FILE='cert.pem'
 DOMAIN=$(grep -e "[ \t]*domains.*" ${LETSENCRYPT_DIR}/cli.ini| sed "s/ //g" |cut -d "=" -f2 | cut -d "," -f1)
 FORCE=0
+QUIET=0
 
 usage() {
   cat >&2 <<__EOF__
@@ -25,6 +26,10 @@ __EOF__
 
 }
 
+log() {
+  [[ "$QUIET" = 0 ]] && echo "$1"
+}
+
 # update base directory via git
 # returns: exit status of last command, here git: 0 if 'git pull' was successful
 update_self() {
@@ -33,32 +38,32 @@ update_self() {
 }
 
 cleanup_certificates() {
-  echo "WARNING: Going to remove ALL -0001, -0002 etc. files and directories"
-  echo "in ~/.config/letsencrypt - make sure there are no needed certificates there."
+  log "WARNING: Going to remove ALL -0001, -0002 etc. files and directories"
+  log "in ~/.config/letsencrypt - make sure there are no needed certificates there."
   cd ${LETSENCRYPT_DIR}
   
   # this is a buggy workaround. Does not cover -0010 and greater numbers
   # deletes all these files and directories without asking further.
   # beware. May eat your dog.
   for f in live/${DOMAIN}-000[1-9]; do
-    echo "  deleting ${f}..."
+    log "  deleting ${f}..."
     rm -rf ${f};
   done
   for f in archive/${DOMAIN}-000[1-9]; do
-    echo "  deleting ${f}..."
+    log "  deleting ${f}..."
     rm -rf ${f};
   done
   for f in renewal/${DOMAIN}-000[1-9].conf; do
-    echo "  deleting ${f}..."
+    log "  deleting ${f}..."
     rm -rf ${f};
   done
-  echo "Cleanup done."
+  log "Cleanup done."
 }
 
 
 if [ "$DOMAIN" == "" ]; then
-  echo "the 'domains' variable in ${LETSENCRYPT_DIR} seems to be malformed or missing."
-  echo "Please check this file. (Hint: have you run uberspace-letsencrypt already?)"
+  log "the 'domains' variable in ${LETSENCRYPT_DIR} seems to be malformed or missing."
+  log "Please check this file. (Hint: have you run uberspace-letsencrypt already?)"
   exit 1
 fi
 
@@ -66,7 +71,7 @@ fi
 while getopts ":cfuhs:" OPT; do
   case "$OPT" in
     u)
-      echo "Updating uberspace-tools..."
+      log "Updating uberspace-tools..."
       update_self || exit 1
 
       # call this veryscript again, without the -u option, and with the
@@ -79,7 +84,7 @@ while getopts ":cfuhs:" OPT; do
       # sleep x seconds - if x is an integer, else do nothing
       RE='^[0-9]+$'
       if [[ "${OPTARG}" =~ ${RE} ]] ; then
-        echo "Sleeping $OPTARG seconds..."
+        log "Sleeping $OPTARG seconds..."
         sleep ${OPTARG}
       else
 	echo "Invalid option: '${OPTARG}' is no Integer" >&2
@@ -96,6 +101,9 @@ while getopts ":cfuhs:" OPT; do
     c)
       cleanup_certificates
       exit 0
+      ;;
+    q)
+      QUIET=1
       ;;
     \?)
       echo "Invalid option: '${OPTARG}'" >&2
@@ -116,14 +124,14 @@ CERT="$(find ${CERT_DIR}/$DOMAIN/ -iname ${CERT_FILE} | sort -k1)"
 # check if the currently online certificate matches the local one
 LOCAL_FINGERPRINT=$(openssl x509 -fingerprint -sha256 -in "$CERT" -noout)
 if [ "${LOCAL_FINGERPRINT}" == "" ]; then
-  echo "There was a problem creating the fingerprint of the server '${DOMAIN}'."
+  echo "There was a problem creating the fingerprint of the server '${DOMAIN}'." >&2
   exit 1
 fi
   
 ONLINE_FINGERPRINT=$(echo | openssl s_client -servername $DOMAIN \
     -connect $DOMAIN:443 2>/dev/null | openssl x509 -fingerprint -noout -sha256)
 if [ "${ONLINE_FINGERPRINT}" == "" ]; then
-  echo "There was a problem creating the fingerprint of the local file '${cert}'."
+  echo "There was a problem creating the fingerprint of the local file '${cert}'." >&2
   exit 1
 fi
 
@@ -141,18 +149,18 @@ if [ "${ONLINE_FINGERPRINT}" == "${LOCAL_FINGERPRINT}" ]; then
                         -k ${CERT_DIR}/$DOMAIN/privkey.pem \
                         -c ${CERT_DIR}/$DOMAIN/${CERT_FILE}
 
-        echo "Everything done. Exiting."
+        log "Everything done. Exiting."
     fi
 else
-    echo "The online certificate does not match the current local certificate."
-    echo "This could be due to a changed (deleted?) domain in cli.ini?"
-    echo "Please correct this manually."
-    echo "Online (${DOMAIN}):"
-    echo "    ${ONLINE_FINGERPRINT}"
-    echo "Local (${CERT}):"
-    echo "    ${LOCAL_FINGERPRINT}"
-    echo "You could try:"
-    echo "    uberspace-add-certificate -k ${CERT_DIR}/$DOMAIN/privkey.pem"\
+    log "The online certificate does not match the current local certificate."
+    log "This could be due to a changed (deleted?) domain in cli.ini?"
+    log "Please correct this manually."
+    log "Online (${DOMAIN}):"
+    log "    ${ONLINE_FINGERPRINT}"
+    log "Local (${CERT}):"
+    log "    ${LOCAL_FINGERPRINT}"
+    log "You could try:"
+    log "    uberspace-add-certificate -k ${CERT_DIR}/$DOMAIN/privkey.pem"\
          " -c ${CERT_DIR}/$DOMAIN/${CERT_FILE}"
     exit 1
 fi
