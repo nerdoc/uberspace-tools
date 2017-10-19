@@ -23,6 +23,7 @@ Options:
   -s wait-time     Time in seconds to wait before checking for
                    certificate renewal, useful for Uberspace servers, where many instances 
 		   of this script are run via crontab @daily
+  -u               Self-update uberspace-tools directory via git before running this script
 
 __EOF__
 
