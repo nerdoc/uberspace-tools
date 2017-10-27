@@ -83,6 +83,7 @@ while getopts ":cqfuhs:" OPT; do
       # call this veryscript again, without the -u option, and with the
       # other options that are still there to parse
       COMMANDLINE=`ps -p $$ -o args --no-headers |sed "s/-u //" |sed "s/-u$//"`
+      echo "$COMMANDLINE" #debug
       ${COMMANDLINE}
       exit 0
       ;;
