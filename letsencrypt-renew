@@ -70,12 +70,18 @@ if [ "$DOMAIN" == "" ]; then
   exit 1
 fi
 
-# process arguments
-while getopts ":cqfuhs:" OPT; do
+# first process quiet option, because it affects all others.
+while getopts ":q" OPT; do
   case "$OPT" in
     q)
       export QUIET=1
       ;;
+  esac
+done
+
+# process arguments
+while getopts ":cqfuhs:" OPT; do
+  case "$OPT" in
     u)
       log "Updating uberspace-tools..."
       update_self || exit 1
