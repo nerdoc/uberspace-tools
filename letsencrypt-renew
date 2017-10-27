@@ -37,6 +37,7 @@ log() {
 # returns: exit status of last command, here git: 0 if 'git pull' was successful
 update_self() {
   cd `dirname $0`
+  echo "git-update check"
   git pull > /dev/null
 }
 
