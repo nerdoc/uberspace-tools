@@ -12,7 +12,7 @@ usage() {
   cat >&2 <<__EOF__
 
 Usage:
-$0  [-s wait-time] [-f]
+$0  [-q] [-s wait-time] [-f] [-h] [-u]
 
 Options:
   -c               Cleanup bogus certificates like domain.tld-0001, created due to a
