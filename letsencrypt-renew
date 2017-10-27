@@ -75,9 +75,11 @@ while getopts ":cqfuhs:" OPT; do
   case "$OPT" in
     q)
       export QUIET=1
+      echo "quiet check"
       ;;
     u)
       log "Updating uberspace-tools..."
+      echo "update check"
       update_self || exit 1
 
       # call this veryscript again, without the -u option, and with the
@@ -104,6 +106,7 @@ while getopts ":cqfuhs:" OPT; do
       ;;
     f)
       FORCE=1
+      echo "force check"
       ;;
     c)
       cleanup_certificates
