@@ -19,7 +19,8 @@ Options:
                    bug in letsencrypt when a domain was removed from cli.ini
   -f               Force renewal, even if certificate is still valid
   -h               Show this message
-  -q               Be quiet. Output only errors.
+  -q               Be quiet. Output only errors, and git/letsencrypt output.
+                   MUST be the first parameter (due to a "feature" in bash)
   -s wait-time     Time in seconds to wait before checking for
                    certificate renewal, useful for Uberspace servers, where many instances 
 		   of this script are run via crontab @daily
@@ -63,6 +64,11 @@ cleanup_certificates() {
   log "Cleanup done."
 }
 
+# first, see if -q is present, because it affects all others.
+if [[ "$1" = "-q" ]]; then
+  export QUIET=1
+  shift
+fi
 
 if [ "$DOMAIN" == "" ]; then
   log "the 'domains' variable in ${LETSENCRYPT_DIR} seems to be malformed or missing."
@@ -70,17 +76,8 @@ if [ "$DOMAIN" == "" ]; then
   exit 1
 fi
 
-# first process quiet option, because it affects all others.
-while getopts ":q" OPT; do
-  case "$OPT" in
-    q)
-      export QUIET=1
-      ;;
-  esac
-done
-
-# process arguments
-while getopts ":cqfuhs:" OPT; do
+# process other arguments
+while getopts ":cfuhs:" OPT; do
   case "$OPT" in
     u)
       log "Updating uberspace-tools..."
