@@ -71,10 +71,10 @@ if [ "$DOMAIN" == "" ]; then
 fi
 
 # process arguments
-while getopts ":cfuhqs:" OPT; do
+while getopts ":cqfuhs:" OPT; do
   case "$OPT" in
     q)
-      QUIET=1
+      export QUIET=1
       ;;
     u)
       log "Updating uberspace-tools..."
