@@ -10,7 +10,7 @@ The `install-mailfilter` script takes care of adding the **SpamAssassin** and **
 
 **CAUTION**: The script overwrites your existing `~/.mailfilter` file without prompt! Please make sure you don't have any customizations there!
 
-THis mailfilter uses a customized *dspam-learn* script and tries to determine which folder is the junk folder of each user (Junk-E-Mail, Spam, Junk). The `.mailfilter` file searches for a `~/.mailfilter.rules` file, and if it exists, includes and processes it too. This is how you can easily keep the `~/.mailfilter` file untouched and put your custom rules (like CC or other filterings) in your `.mailfilter.rules` file.
+This mailfilter uses a customized *dspam-learn* script and tries to determine which folder is the junk folder of each user (Junk-E-Mail, Spam, Junk). The `.mailfilter` file searches for a `~/.mailfilter.rules` file, and if it exists, includes and processes it too. This is how you can easily keep the `~/.mailfilter` file untouched and put your custom rules (like CC or other filterings) in your `.mailfilter.rules` file.
 
 Please contact me if you know a better approach here.
 
