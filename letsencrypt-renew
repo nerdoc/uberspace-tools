@@ -6,7 +6,7 @@ CERT_DIR=${LETSENCRYPT_DIR}/live
 CERT_FILE='cert.pem'
 DOMAIN=$(grep -e "[ \t]*domains.*" ${LETSENCRYPT_DIR}/cli.ini| sed "s/ //g" |cut -d "=" -f2 | cut -d "," -f1)
 FORCE=0
-QUIET=0
+VERBOSE=0
 
 usage() {
   cat >&2 <<__EOF__
@@ -19,19 +19,19 @@ Options:
                    bug in letsencrypt when a domain was removed from cli.ini
   -f               Force renewal, even if certificate is still valid
   -h               Show this message
-  -q               Be quiet. Output only errors, and git/letsencrypt output.
+  -v               Be verbose. Per default, this script only prints errors, and git/letsencrypt output.
                    MUST be the first parameter (due to a "feature" in bash)
   -s wait-time     Time in seconds to wait before checking for
                    certificate renewal, useful for Uberspace servers, where many instances 
 		   of this script are run via crontab @daily
   -u               Self-update uberspace-tools directory via git before running this script
-
+  
 __EOF__
 
 }
 
 log() {
-  [[ "$QUIET" = 0 ]] && echo "$1"
+  [[ "$VERBOSE" = 1 ]] && echo "$1"
 }
 
 # update base directory via git
@@ -64,9 +64,9 @@ cleanup_certificates() {
   log "Cleanup done."
 }
 
-# first, see if -q is present, because it affects all others.
-if [[ "$1" = "-q" ]]; then
-  export QUIET=1
+# first, see if -v is present, because it affects all others.
+if [[ "$1" = "-v" ]]; then
+  export VERBOSE=1
   shift
 fi
 
@@ -88,6 +88,11 @@ while getopts ":cfuhs:" OPT; do
       COMMANDLINE=`ps -p $$ -o args --no-headers |sed "s/-u //" |sed "s/-u$//"`
       ${COMMANDLINE}
       exit 0
+      ;;
+    q)
+      echo "The -q switch was removed, as output is muted as default now."
+      echo "Use -v to add verbosity."
+      exit 1
       ;;
     s)
       # sleep x seconds - if x is an integer, else do nothing
