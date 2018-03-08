@@ -171,7 +171,6 @@ else
     log "Local (${CERT}):"
     log "    ${LOCAL_FINGERPRINT}"
     log "You could try:"
-    log "    uberspace-add-certificate -k ${CERT_DIR}/$DOMAIN/privkey.pem"\
-         " -c ${CERT_DIR}/$DOMAIN/${CERT_FILE}"
+    log "    uberspace-add-certificate -k ${CERT_DIR}/$DOMAIN/privkey.pem -c ${CERT_DIR}/$DOMAIN/${CERT_FILE}"
     exit 1
 fi
